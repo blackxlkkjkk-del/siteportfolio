@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Ícone dinâmico da aba do navegador (atualizado em tempo real via JS) -->
+  <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23040914'/%3E%3Cpath d='M28 10 L34 10 L32 54 L26 54 Z' fill='%2394A3B8'/%3E%3Cpath d='M32 14 C42 12, 52 8, 56 6 C58 18, 56 30, 50 38 C44 34, 38 30, 32 29 Z' fill='%2300F0FF'/%3E%3C/svg%3E" />
+  <title>Bruno | Desenvolvedor de Sistemas & Web</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Cinzel Decorative, Cinzel, Uncial Antiqua (Runas/Nórdico), Space Grotesk, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            rune: ['Cinzel Decorative', 'Cinzel', 'serif'],
+            ancient: ['Uncial Antiqua', 'Cinzel', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==================== VARIÁVEIS DE TEMA (LEVIATHAN DARK / ASGARD LIGHT / SPARTAN RAGE) ==================== */
+    :root {
+      --bg-base: #040914;
+      --bg-elevated: #091326;
+      --bg-card: rgba(9, 19, 38, 0.80);
+      --bg-pill: rgba(4, 9, 20, 0.92);
+      --text-main: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      --accent: #38BDF8;
+      --accent-bright: #00F0FF;
+      --accent-glow: rgba(0, 240, 255, 0.42);
+      --border-subtle: rgba(56, 189, 248, 0.24);
+      --grid-line: rgba(56, 189, 248, 0.045);
+      --rim-light: #00F0FF;
+      --suit-top: #0F1D3A;
+      --suit-mid: #070E1F;
+      --suit-bot: #03060E;
+      --btn-text: #030712;
+    }
+
+    /* Tema Claro: Neve de Midgard / Asgard */
+    body.light-theme {
+      --bg-base: #EEF4FC;
+      --bg-elevated: #FFFFFF;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-pill: rgba(241, 246, 255, 0.95);
+      --text-main: #0A162E;
+      --text-secondary: #1E3256;
+      --text-muted: #475D82;
+      --accent: #0284C7;
+      --accent-bright: #0369A1;
+      --accent-glow: rgba(2, 132, 199, 0.28);
+      --border-subtle: rgba(2, 132, 199, 0.26);
+      --grid-line: rgba(2, 132, 199, 0.06);
+      --rim-light: #0284C7;
+      --suit-top: #1E3A6D;
+      --suit-mid: #0F2347;
+      --suit-bot: #071226;
+      --btn-text: #FFFFFF;
+    }
+
+    /* Modo Fúria Espartana (Vermelho / Brasas) */
+    body.spartan-rage {
+      --accent: #EF4444;
+      --accent-bright: #FF4500;
+      --accent-glow: rgba(255, 69, 0, 0.45);
+      --border-subtle: rgba(239, 68, 68, 0.36);
+      --rim-light: #FF5500;
+    }
+
+    body.spartan-rage:not(.light-theme) {
+      --bg-base: #070812;
+      --bg-elevated: #140B16;
+      --bg-card: rgba(20, 11, 22, 0.84);
+      --bg-pill: rgba(14, 7, 16, 0.92);
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.45s ease, color 0.35s ease;
+    }
+
+    /* Grade Técnica de Telemetria / Engenharia */
+    .tech-grid {
+      background-size: 46px 46px;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    }
+
+    /* Cards Glassmorphism Adaptáveis */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 14px 40px -14px rgba(2, 8, 23, 0.35);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease, background-color 0.4s ease;
+    }
+
+    .glass-card:hover {
+      border-color: var(--accent-bright);
+      box-shadow: 0 18px 46px -12px var(--accent-glow);
+    }
+
+    .pill-surface {
+      background: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .text-main { color: var(--text-main); }
+    .text-sec { color: var(--text-secondary); }
+    .text-mut { color: var(--text-muted); }
+    .accent-text { color: var(--accent); transition: color 0.35s ease; }
+    .accent-bright-text { color: var(--accent-bright); transition: color 0.35s ease; }
+
+    /* Tipografia Rúnica */
+    .rune-inscription {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      letter-spacing: 0.22em;
+      text-shadow: 0 0 14px var(--accent-glow);
+      transition: all 0.3s ease;
+    }
+
+    .rune-inscription:hover {
+      letter-spacing: 0.28em;
+      color: var(--accent-bright);
+    }
+
+    .gradient-title {
+      background: linear-gradient(135deg, var(--text-main) 15%, var(--accent) 60%, var(--accent-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+      color: var(--btn-text);
+      box-shadow: 0 0 24px var(--accent-glow);
+      transition: all 0.28s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 34px var(--accent-glow);
+    }
+
+    /* Aura de Cursor Desktop */
+    #cursor-aura {
+      width: 340px;
+      height: 340px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0.32;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+    }
+
+    /* ==================== ANIMAÇÕES DO MACHADO LEVIATÃ ==================== */
+    @keyframes floatAxe {
+      0%, 100% { transform: translateY(0px) rotate(-6deg); }
+      50% { transform: translateY(-10px) rotate(-3deg); }
+    }
+
+    @keyframes axeThrown {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      40% { transform: translate(180px, -90px) rotate(540deg) scale(0.75); opacity: 0.7; }
+      100% { transform: translate(420px, -160px) rotate(1080deg) scale(0.2); opacity: 0; }
+    }
+
+    @keyframes axeRecalled {
+      0% { transform: translate(420px, -160px) rotate(1080deg) scale(0.2); opacity: 0; }
+      75% { transform: translate(-14px, 6px) rotate(-18deg) scale(1.08); opacity: 1; }
+      100% { transform: translate(0, 0) rotate(-6deg) scale(1); opacity: 1; }
+    }
+
+    @keyframes impactShake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 4px); }
+      40% { transform: translate(6px, -4px); }
+      60% { transform: translate(-4px, -2px); }
+      80% { transform: translate(4px, 2px); }
+    }
+
+    @keyframes shockwaveRing {
+      0% { transform: scale(0.35); opacity: 0.95; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .axe-idle { animation: floatAxe 5s ease-in-out infinite; }
+    .axe-thrown { animation: axeThrown 0.65s cubic-bezier(0.55, 0.05, 0.68, 0.19) forwards !important; }
+    .axe-recalled { animation: axeRecalled 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
+    .shake-hit { animation: impactShake 0.35s ease-in-out; }
+
+    .shockwave {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 9999px;
+      border: 3px solid var(--accent-bright);
+      box-shadow: 0 0 25px var(--accent-bright);
+      pointer-events: none;
+      animation: shockwaveRing 0.65s ease-out forwards;
+    }
+
+    .blade-rune {
+      stroke: var(--accent-bright);
+      transition: all 0.35s ease;
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 9999px; }
+  </style>
+</head>
+<body class="font-sans antialiased tech-grid selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- Aura Rúnica que acompanha o cursor no desktop -->
+  <div id="cursor-aura" class="fixed hidden lg:block z-0"></div>
+
+  <!-- Canvas de Partículas (Gelo / Brasas / Explosões de Clique) -->
+  <canvas id="fx-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- Toast Flutuante (Sem alert()) -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="glass-card px-5 py-3.5 rounded-2xl flex items-center gap-3 border border-sky-400/50">
+      <i id="toast-icon" class="ph-fill ph-sparkle text-xl accent-bright-text"></i>
+      <div>
+        <p id="toast-title" class="text-sm font-bold text-main">Notificação</p>
+        <p id="toast-desc" class="text-xs text-sec">Ação realizada com sucesso.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HEADER COM IDIOMA (PT/EN), TEMA (DARK/LIGHT) E FÚRIA ESPARTANA ==================== -->
+  <header class="fixed top-0 inset-x-0 z-40 px-3 sm:px-6 pt-3 sm:pt-4">
+    <nav class="max-w-6xl mx-auto glass-card rounded-2xl px-3.5 sm:px-5 py-3 flex items-center justify-between gap-2">
+
+      <!-- Marca com Runa Elder Futhark -->
+      <a href="#inicio" class="flex items-center gap-2.5 group shrink-0">
+        <div class="w-9 h-9 rounded-xl pill-surface flex items-center justify-center group-hover:border-sky-400 transition">
+          <span class="font-rune font-black text-lg accent-bright-text">ᛒ</span>
+        </div>
+        <div>
+          <span class="font-display font-bold text-base sm:text-lg tracking-tight text-main block leading-none">
+            BRUNO<span class="accent-text">.DEV</span>
+          </span>
+          <span class="font-rune text-[9px] tracking-[0.2em] uppercase text-mut block mt-0.5">ᛒᚱᚢᚾᛟ • DS</span>
+        </div>
+      </a>
+
+      <!-- Navegação Desktop -->
+      <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-sec">
+        <a href="#sobre" data-i18n="nav_about" class="hover:text-main transition">Sobre</a>
+        <a href="#forja" data-i18n="nav_forge" class="hover:text-main transition">Oráculo</a>
+        <a href="#projetos" data-i18n="nav_projects" class="hover:text-main transition">Projetos</a>
+        <a href="#stack" data-i18n="nav_skills" class="hover:text-main transition">Arsenal</a>
+        <a href="#contato" data-i18n="nav_contact" class="hover:text-main transition">Contato</a>
+      </div>
+
+      <!-- Controles Interativos: Idioma + Tema + Modo Leviatã/Espartano + GitHub -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+
+        <!-- Alternador PT-BR / EN -->
+        <button id="lang-toggle-btn" type="button"
+          class="px-2.5 py-2 rounded-xl pill-surface hover:border-sky-400 text-[11px] font-mono font-bold text-main flex items-center gap-1.5 cursor-pointer"
+          title="Alternar Idioma / Switch Language">
+          <i class="ph-bold ph-translate text-sm accent-text"></i>
+          <span id="lang-label">PT-BR</span>
+        </button>
+
+        <!-- Alternador Tema Escuro / Claro -->
+        <button id="theme-toggle-btn" type="button"
+          class="p-2 rounded-xl pill-surface hover:border-sky-400 text-main flex items-center justify-center cursor-pointer"
+          aria-label="Alternar Tema Escuro/Claro"
+          title="Modo Escuro / Modo Claro">
+          <i id="theme-icon" class="ph-fill ph-moon-stars text-base accent-text"></i>
+        </button>
+
+        <!-- Modo Leviatã / Fúria Espartana -->
+        <button id="rage-toggle-btn" type="button"
+          class="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl pill-surface hover:border-sky-400 text-[11px] font-mono font-bold text-main cursor-pointer"
+          title="Leviatã Frost / Fúria Espartana">
+          <i id="rage-icon" class="ph-fill ph-snowflake text-sm accent-bright-text"></i>
+          <span id="rage-text" class="hidden sm:inline">LEVIATÃ</span>
+        </button>
+
+        <!-- GitHub -->
+        <a href="https://github.com/blackxlkkjkk-del" target="_blank" rel="noopener noreferrer"
+          class="p-2 rounded-xl pill-surface hover:border-sky-400 text-main transition"
+          aria-label="GitHub do Bruno">
+          <i class="ph-fill ph-github-logo text-base"></i>
+        </a>
+
+        <!-- Menu Mobile -->
+        <button id="mobile-btn" type="button" class="lg:hidden p-2 rounded-xl pill-surface text-main" aria-label="Menu">
+          <i class="ph ph-list text-base"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Menu Mobile -->
+    <div id="mobile-nav" class="hidden lg:hidden max-w-6xl mx-auto mt-2 glass-card rounded-2xl p-4 flex-col gap-2 text-sm font-medium text-sec">
+      <a href="#sobre" data-i18n="nav_about" class="py-2 px-3 rounded-lg hover:bg-sky-500/10 mobile-item">Sobre</a>
+      <a href="#forja" data-i18n="nav_forge" class="py-2 px-3 rounded-lg hover:bg-sky-500/10 mobile-item">Oráculo</a>
+      <a href="#projetos" data-i18n="nav_projects" class="py-2 px-3 rounded-lg hover:bg-sky-500/10 mobile-item">Projetos</a>
+      <a href="#stack" data-i18n="nav_skills" class="py-2 px-3 rounded-lg hover:bg-sky-500/10 mobile-item">Arsenal</a>
+      <a href="#contato" data-i18n="nav_contact" class="py-2 px-3 rounded-lg hover:bg-sky-500/10 mobile-item">Contato</a>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+    <!-- ==================== HERO SECTION: TELEMETRIA + HOMEM DE TERNO + MACHADO LEVIATÃ ==================== -->
+    <section id="inicio" class="min-h-screen flex items-center pt-28 pb-16 px-4 sm:px-6 relative overflow-hidden">
+      <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+
+        <!-- Esquerda: Apresentação Editorial com Tipografia Rúnica & Ritmo de Precisão -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full pill-surface font-mono text-[11px] sm:text-xs tracking-wider accent-text">
+            <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+            <span data-i18n="hero_badge">DESENVOLVIMENTO DE SISTEMAS • INGLÊS BÁSICO</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <p class="rune-inscription text-xs sm:text-sm uppercase accent-text font-bold select-none" title="BRUNO • MIDGARD CODE">
+              ᛗᛁᛞᚷᚨᚱᛞ // ᛒᚱᚢᚾᛟ • ᛞᛖᚡ
+            </p>
+            <h1 class="font-display text-4xl sm:text-6xl font-bold tracking-tight leading-[1.06] text-main">
+              <span data-i18n="hero_greeting">Eu sou o</span> <span class="gradient-title font-rune tracking-normal">Bruno.</span><br />
+              <span data-i18n="hero_subtitle" class="text-2xl sm:text-4xl text-sec font-display font-semibold">Código veloz, limpo e com identidade.</span>
+            </h1>
+          </div>
+
+          <p data-i18n="hero_desc" class="text-sec text-sm sm:text-base leading-relaxed max-w-xl">
+            Estudante de <strong class="text-main">Desenvolvimento de Sistemas (DS)</strong> com <strong class="text-main">Inglês Básico</strong>. Fiz parte do <strong class="accent-text">EchoMind</strong> e construo projetos pessoais como o PWA <strong class="text-main">Patas &amp; Cia</strong> e o projeto <strong class="text-main">Tesla</strong> no GitHub.
+          </p>
+
+          <!-- Botões de Ação -->
+          <div class="flex flex-wrap items-center gap-3.5 pt-2">
+            <a href="#projetos" class="btn-primary px-6 py-3.5 rounded-xl font-display font-bold text-sm sm:text-base flex items-center gap-2">
+              <span data-i18n="hero_cta_projects">Ver Projetos</span>
+              <i class="ph-bold ph-arrow-down-right text-lg"></i>
+            </a>
+
+            <a href="https://github.com/blackxlkkjkk-del" target="_blank" rel="noopener noreferrer"
+              class="px-5 py-3.5 rounded-xl pill-surface hover:border-sky-400 text-main font-display font-semibold text-sm sm:text-base transition flex items-center gap-2.5">
+              <i class="ph-fill ph-github-logo text-xl accent-text"></i>
+              <span>GitHub</span>
+            </a>
+
+            <a href="https://echomind-rho.vercel.app/" target="_blank" rel="noopener noreferrer"
+              class="px-5 py-3.5 rounded-xl pill-surface hover:border-sky-400 accent-text font-mono text-xs sm:text-sm font-bold transition flex items-center gap-2">
+              <i class="ph-bold ph-planet accent-bright-text"></i>
+              <span>EchoMind ↗</span>
+            </a>
+          </div>
+
+          <!-- Status Bar com Runas -->
+          <div class="pt-4 grid grid-cols-3 gap-3 max-w-md border-t border-slate-500/20">
+            <div>
+              <p class="font-rune font-bold text-lg sm:text-xl text-main">ᛞᛋ • DS</p>
+              <p data-i18n="stat_ds" class="text-[11px] text-mut">Curso Técnico</p>
+            </div>
+            <div>
+              <p class="font-rune font-bold text-lg sm:text-xl text-main">ᛈᚹᚨ</p>
+              <p data-i18n="stat_app" class="text-[11px] text-mut">EchoMind &amp; PWA</p>
+            </div>
+            <div>
+              <p class="font-rune font-bold text-lg sm:text-xl text-main">ᛖᚾ-ᚢᛋ</p>
+              <p data-i18n="stat_en" class="text-[11px] text-mut">Inglês Básico</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direita: HOMEM MISTERIOSO DE TERNO + MACHADO LEVIATÃ CLICÁVEL -->
+        <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
+
+          <div id="hero-arena" class="relative w-full max-w-lg rounded-3xl glass-card p-5 sm:p-6 overflow-hidden">
+            <!-- Header do Painel Interativo -->
+            <div class="flex items-center justify-between text-[11px] font-mono text-mut mb-2 relative z-20 gap-2">
+              <span class="flex items-center gap-1.5">
+                <i class="ph-fill ph-shield-star accent-bright-text"></i>
+                <span data-i18n="relic_title">RELÍQUIA RÚNICA • CLIQUE NA LÂMINA</span>
+              </span>
+              <span id="rune-counter" class="accent-text font-bold shrink-0">00 GOLPES</span>
+            </div>
+
+            <!-- Cena Combinada: Homem Misterioso de Terno + Machado Leviatã -->
+            <div class="relative h-[350px] sm:h-[395px] flex items-center justify-center select-none">
+
+              <!-- Círculo Rúnico de Fundo -->
+              <svg viewBox="0 0 360 360" class="w-72 h-72 sm:w-80 sm:h-80 opacity-30 pointer-events-none" style="color: var(--accent);">
+                <circle cx="180" cy="180" r="156" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="7 6" />
+                <circle cx="180" cy="180" r="124" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6" />
+                <text x="180" y="34" text-anchor="middle" fill="currentColor" font-size="13" font-family="Cinzel Decorative, serif" letter-spacing="6">ᛟᛞᛁᚾ • ᛏᚺᛟᚱ • ᛒᚱᚢᚾᛟ</text>
+                <text x="180" y="336" text-anchor="middle" fill="currentColor" font-size="13" font-family="Cinzel Decorative, serif" letter-spacing="6">ᛗᛁᛞᚷᚨᚱᛞ • ᛚᛖᚡᛁᚨᛏᚺᚨᚾ</text>
+              </svg>
+
+              <!-- HOMEM MISTERIOSO DE TERNO (Silhueta Estilizada com Parallax) -->
+              <div id="mysterious-suit" class="absolute inset-0 flex items-center justify-center pointer-events-none transition-transform duration-150 ease-out" style="transform: translateX(-28px);">
+                <svg viewBox="0 0 240 340" class="w-48 sm:w-56 h-72 sm:h-80 drop-shadow-[0_18px_28px_rgba(0,0,0,0.65)]">
+                  <defs>
+                    <linearGradient id="suitGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color: var(--suit-top);" />
+                      <stop offset="55%" style="stop-color: var(--suit-mid);" />
+                      <stop offset="100%" style="stop-color: var(--suit-bot);" />
+                    </linearGradient>
+                    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color: var(--rim-light); stop-opacity: 0.95;" />
+                      <stop offset="100%" style="stop-color: var(--accent); stop-opacity: 0.15;" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Aura atrás do personagem -->
+                  <ellipse cx="120" cy="175" rx="76" ry="125" fill="url(#rimGrad)" opacity="0.16" />
+
+                  <!-- Cabeça e Cabelo Misterioso -->
+                  <path d="M92 64 C92 40, 148 40, 148 64 C152 84, 145 104, 120 110 C95 104, 88 84, 92 64 Z" fill="url(#suitGrad)" stroke="url(#rimGrad)" stroke-width="1.5" />
+                  <!-- Mecha / Contorno de cabelo -->
+                  <path d="M91 66 C96 45, 134 42, 148 62 C140 56, 122 55, 108 66 C100 72, 95 72, 91 66 Z" fill="var(--suit-bot)" />
+                  <!-- Visor / Olhar sutil brilhante -->
+                  <path d="M104 78 L116 79" stroke="var(--accent-bright)" stroke-width="2" stroke-linecap="round" opacity="0.85" />
+                  <path d="M126 79 L137 78" stroke="var(--accent-bright)" stroke-width="2" stroke-linecap="round" opacity="0.85" />
+
+                  <!-- Pescoço -->
+                  <rect x="109" y="104" width="22" height="18" rx="4" fill="var(--suit-mid)" />
+
+                  <!-- Terno / Paletó -->
+                  <path d="M56 154 C62 128, 88 120, 109 120 L120 158 L131 120 C152 120, 178 128, 184 154 L196 315 L44 315 Z"
+                    fill="url(#suitGrad)" stroke="url(#rimGrad)" stroke-width="1.8" />
+
+                  <!-- Camisa Social Interna -->
+                  <polygon points="109,120 120,162 131,120 120,126" fill="var(--text-main)" opacity="0.88" />
+                  <!-- Gravata Slim -->
+                  <polygon points="117,126 123,126 125,182 120,192 115,182" fill="var(--accent-bright)" />
+
+                  <!-- Lapelas do Terno -->
+                  <polygon points="109,120 96,144 114,174 120,158" fill="var(--suit-bot)" opacity="0.75" />
+                  <polygon points="131,120 144,144 126,174 120,158" fill="var(--suit-bot)" opacity="0.75" />
+
+                  <!-- Lenço de bolso com detalhe rúnico -->
+                  <polygon points="142,174 156,168 154,179 142,179" fill="var(--accent-bright)" opacity="0.8" />
+                </svg>
+              </div>
+
+              <!-- MACHADO LEVIATÃ INTERATIVO (CLICÁVEL PARA ATAQUES RÚNICOS) -->
+              <div id="leviathan-wrapper" class="relative z-20 axe-idle cursor-pointer" style="margin-left: 44px;" title="Clique para desferir um Ataque Rúnico!">
+                <svg id="leviathan-axe" viewBox="0 0 260 280" class="w-48 sm:w-56 h-56 sm:h-64 drop-shadow-[0_0_24px_var(--accent-glow)]">
+                  <defs>
+                    <linearGradient id="axeSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#F8FAFC" />
+                      <stop offset="45%" stop-color="#94A3B8" />
+                      <stop offset="100%" stop-color="#334155" />
+                    </linearGradient>
+                    <linearGradient id="axeWood" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#451A03" />
+                      <stop offset="50%" stop-color="#78350F" />
+                      <stop offset="100%" stop-color="#290F02" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Cabo do Machado -->
+                  <path d="M114 26 C119 24, 125 24, 129 28 L142 256 C136 262, 126 262, 121 256 Z"
+                    fill="url(#axeWood)" stroke="#0F172A" stroke-width="2" />
+
+                  <!-- Detalhes metálicos no cabo -->
+                  <rect x="115" y="68" width="17" height="8" rx="2" transform="rotate(-3 115 68)" fill="#64748B" />
+                  <rect x="122" y="218" width="18" height="10" rx="2" transform="rotate(-3 122 218)" fill="#64748B" />
+
+                  <!-- Lâmina Principal do Leviatã -->
+                  <path d="M124 44 C156 38, 196 24, 222 10 C232 54, 224 104, 194 134 C170 116, 148 106, 126 102 Z"
+                    fill="url(#axeSteel)" stroke="#E2E8F0" stroke-width="2" />
+
+                  <!-- Gume Afiado Brilhante -->
+                  <path d="M222 10 C232 54, 224 104, 194 134"
+                    fill="none" class="blade-rune" stroke-width="3.5" stroke-linecap="round" />
+
+                  <!-- Contra-lâmina / Martelo Traseiro -->
+                  <path d="M122 52 L94 60 L96 88 L124 94 Z"
+                    fill="#475569" stroke="#94A3B8" stroke-width="1.5" />
+
+                  <!-- Canaleta Rúnica na Lâmina -->
+                  <path d="M138 62 L198 38 M142 78 L204 62 M144 92 L192 88"
+                    class="blade-rune" stroke-width="2.5" stroke-linecap="round" />
+
+                  <!-- Runas Brilhantes na Lâmina -->
+                  <text x="156" y="56" fill="var(--accent-bright)" font-size="13" font-family="Cinzel Decorative, serif" font-weight="bold">ᛟ</text>
+                  <text x="174" y="50" fill="var(--accent-bright)" font-size="13" font-family="Cinzel Decorative, serif" font-weight="bold">ᛏ</text>
+                  <text x="164" y="76" fill="var(--accent-bright)" font-size="13" font-family="Cinzel Decorative, serif" font-weight="bold">ᚨ</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- HUD do Ataque Rúnico + Botão △ Arremessar / Chamar -->
+            <div class="mt-2 pt-3 border-t border-slate-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-20">
+              <div>
+                <p id="attack-name" data-i18n="attack_ready" class="font-mono text-xs font-bold accent-bright-text uppercase">
+                  PRONTO • CLIQUE NO MACHADO
+                </p>
+                <p id="attack-desc" data-i18n="attack_hint" class="text-xs text-mut">
+                  Canalize runas de gelo ou mude para Fúria Espartana no topo.
+                </p>
+              </div>
+
+              <button id="throw-axe-btn" type="button"
+                class="px-3.5 py-2 rounded-xl pill-surface hover:border-sky-400 font-mono text-xs font-bold text-main flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+                <span class="accent-bright-text">△</span>
+                <span id="throw-btn-label" data-i18n="btn_throw">ARREMESSAR</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SOBRE MIM + ÍCONE DA ABA AO VIVO ==================== -->
+    <section id="sobre" class="py-20 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="reveal mb-12">
+          <p class="rune-inscription text-xs uppercase accent-text font-bold mb-2">ᛒᚱᚢᚾᛟ • ᛈᚱᛟᚠᛁᛚᛖ</p>
+          <h2 data-i18n="about_title" class="font-display text-3xl sm:text-5xl font-bold text-main">
+            Sobre o <span class="gradient-title">Bruno</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 space-y-4 reveal">
+            <h3 data-i18n="about_heading" class="font-display text-xl sm:text-2xl font-bold text-main">
+              Construindo base sólida em Desenvolvimento de Sistemas
+            </h3>
+            <p data-i18n="about_p1" class="text-sec text-sm sm:text-base leading-relaxed">
+              Meu nome é <strong class="text-main">Bruno</strong> e estou trilhando minha jornada em <strong class="text-main">Desenvolvimento de Sistemas (DS)</strong>. Gosto de interfaces diretas, bem estruturadas e com personalidade — unindo organização técnica com estética marcante.
+            </p>
+            <p data-i18n="about_p2" class="text-sec text-sm sm:text-base leading-relaxed">
+              Fiz parte do <strong class="accent-text">EchoMind</strong> e também desenvolvi projetos pessoais publicados no meu GitHub, como o <strong class="text-main">Patas &amp; Cia</strong> (aplicação web progressiva / PWA) e o projeto <strong class="text-main">Tesla</strong>. Tenho <strong class="text-main">Inglês Básico</strong>, o que me ajuda a ler documentações e evoluir constantemente.
+            </p>
+          </div>
+
+          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 reveal">
+            <div class="glass-card rounded-2xl p-5 flex items-start gap-4">
+              <div class="w-11 h-11 rounded-xl pill-surface flex items-center justify-center shrink-0">
+                <i class="ph-duotone ph-code text-2xl accent-bright-text"></i>
+              </div>
+              <div>
+                <h4 data-i18n="card_ds_title" class="font-display font-bold text-main">Desenvolvimento de Sistemas</h4>
+                <p data-i18n="card_ds_desc" class="text-xs sm:text-sm text-sec mt-1">Lógica de programação, estrutura de projetos web, interfaces responsivas e versionamento no GitHub.</p>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 flex items-start gap-4">
+              <div class="w-11 h-11 rounded-xl pill-surface flex items-center justify-center shrink-0">
+                <i class="ph-duotone ph-translate text-2xl accent-bright-text"></i>
+              </div>
+              <div>
+                <h4 data-i18n="card_en_title" class="font-display font-bold text-main">Inglês Básico</h4>
+                <p data-i18n="card_en_desc" class="text-xs sm:text-sm text-sec mt-1">Compreensão de termos técnicos, leitura de códigos e documentação em evolução contínua.</p>
+              </div>
+            </div>
+
+            <!-- Card Mostrando o Ícone da Aba (Favicon) Dinâmico -->
+            <div class="glass-card rounded-2xl p-5 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div id="tab-preview-box" class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-sky-400/40" style="background: var(--bg-base);">
+                  <span id="tab-preview-rune" class="font-rune font-black text-xl accent-bright-text">ᛒ</span>
+                </div>
+                <div>
+                  <h4 data-i18n="card_fav_title" class="font-display font-bold text-sm text-main">Ícone da Aba Ativo</h4>
+                  <p id="tab-preview-status" data-i18n="card_fav_desc" class="text-xs text-sec">Muda conforme o modo e runas.</p>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] px-2 py-1 rounded-md pill-surface accent-text">FAVICON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ORÁCULO DE MIMIR ==================== -->
+    <section id="forja" class="py-16 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="glass-card rounded-3xl p-6 sm:p-10 reveal">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2 max-w-2xl">
+              <div class="inline-flex items-center gap-2 font-mono text-xs accent-text uppercase tracking-wider">
+                <span class="font-rune text-sm">ᛗᛁᛗᛁᚱ</span>
+                <span data-i18n="mimir_tag">• SABEDORIA DO ORÁCULO</span>
+              </div>
+              <h3 data-i18n="mimir_title" class="font-display text-2xl sm:text-3xl font-bold text-main">
+                Conselho de Mimir para a Jornada em DS
+              </h3>
+              <p id="mimir-quote" class="text-sec text-sm sm:text-base italic leading-relaxed">
+                "A pressa quebra a compilação, rapaz. Escreva código limpo, teste cada passo e deixe a lógica falar."
+              </p>
+            </div>
+
+            <button id="mimir-next-btn" type="button"
+              class="btn-primary px-5 py-3.5 rounded-xl font-display font-bold text-sm flex items-center gap-2 shrink-0 cursor-pointer">
+              <i class="ph-bold ph-arrows-clockwise text-lg"></i>
+              <span data-i18n="mimir_btn">Novo Conselho</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PROJETOS (ECHOMIND, PATAS & CIA PWA, TESLA, GITHUB) ==================== -->
+    <section id="projetos" class="py-20 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+          <div>
+            <p class="rune-inscription text-xs uppercase accent-text font-bold mb-2">ᛖᚲᚺᛟᛗᛁᚾᛞ • ᚱᛖᛚᛁᚲᛊ</p>
+            <h2 data-i18n="projects_title" class="font-display text-3xl sm:text-5xl font-bold text-main">
+              Projetos em <span class="gradient-title">Destaque</span>
+            </h2>
+          </div>
+          <a href="https://github.com/blackxlkkjkk-del" target="_blank" rel="noopener noreferrer"
+            class="font-mono text-xs sm:text-sm accent-text hover:underline flex items-center gap-1.5">
+            <span data-i18n="projects_all_gh">Ver todos no GitHub (@blackxlkkjkk-del)</span>
+            <i class="ph-bold ph-arrow-up-right"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- 1. EchoMind (Participação / Contribuição do Bruno) -->
+          <article class="glass-card rounded-3xl p-6 flex flex-col justify-between reveal">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="px-3 py-1 rounded-full pill-surface font-mono text-[11px] accent-bright-text font-bold">
+                  ECHOMIND • PARTICIPAÇÃO
+                </span>
+                <span class="font-rune text-sm text-mut">ᛖᚲᚺᛟ</span>
+              </div>
+
+              <h3 class="font-display text-xl sm:text-2xl font-bold text-main mb-2">EchoMind</h3>
+              <p data-i18n="proj_echo_desc" class="text-sec text-sm leading-relaxed mb-5">
+                Projeto web no qual <strong class="text-main">eu fiz parte</strong> (não sou o criador solo). Experiência digital moderna publicada na Vercel com foco em interface e navegação fluida.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex flex-wrap gap-2 text-[11px] font-mono text-mut">
+                <span class="px-2.5 py-1 rounded-lg pill-surface">Web App</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">Vercel</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">Team / Part</span>
+              </div>
+
+              <div class="flex items-center gap-4 pt-3 border-t border-slate-500/20 text-sm font-semibold">
+                <a href="https://echomind-rho.vercel.app/" target="_blank" rel="noopener noreferrer"
+                  class="accent-bright-text hover:underline flex items-center gap-1">
+                  <span data-i18n="btn_visit">Acessar site</span>
+                  <i class="ph-bold ph-arrow-up-right"></i>
+                </a>
+                <a href="https://github.com/blackxlkkjkk-del" target="_blank" rel="noopener noreferrer"
+                  class="text-sec hover:text-main flex items-center gap-1">
+                  <span>GitHub</span>
+                  <i class="ph-bold ph-github-logo"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. Patas & Cia / PetApp (PWA) -->
+          <article class="glass-card rounded-3xl p-6 flex flex-col justify-between reveal">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="px-3 py-1 rounded-full pill-surface font-mono text-[11px] accent-bright-text font-bold">
+                  PETAPP • PWA
+                </span>
+                <span class="font-rune text-sm text-mut">ᛈᚨᛏᚨᛊ</span>
+              </div>
+
+              <h3 class="font-display text-xl sm:text-2xl font-bold text-main mb-2">Patas &amp; Cia</h3>
+              <p data-i18n="proj_patas_desc" class="text-sec text-sm leading-relaxed mb-5">
+                Projeto de <strong class="text-main">PetApp em formato PWA</strong> (Progressive Web App) disponível no GitHub, pensado para oferecer experiência de aplicativo na web com visual prático e responsivo.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex flex-wrap gap-2 text-[11px] font-mono text-mut">
+                <span class="px-2.5 py-1 rounded-lg pill-surface">PWA</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">PetApp</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">Mobile Ready</span>
+              </div>
+
+              <div class="flex items-center gap-4 pt-3 border-t border-slate-500/20 text-sm font-semibold">
+                <a href="https://github.com/blackxlkkjkk-del/patasEcia" target="_blank" rel="noopener noreferrer"
+                  class="accent-bright-text hover:underline flex items-center gap-1">
+                  <span data-i18n="btn_repo">Ver repositório</span>
+                  <i class="ph-bold ph-arrow-up-right"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. Projeto Tesla -->
+          <article class="glass-card rounded-3xl p-6 flex flex-col justify-between reveal">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="px-3 py-1 rounded-full pill-surface font-mono text-[11px] accent-bright-text font-bold">
+                  AUTOMOTIVE • WEB
+                </span>
+                <span class="font-rune text-sm text-mut">ᛏᛖᛊᛚᚨ</span>
+              </div>
+
+              <h3 class="font-display text-xl sm:text-2xl font-bold text-main mb-2">Tesla</h3>
+              <p data-i18n="proj_tesla_desc" class="text-sec text-sm leading-relaxed mb-5">
+                Projeto pessoal <strong class="text-main">Tesla</strong> hospedado no GitHub, explorando layout tecnológico, apresentação de produto e estrutura front-end.
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex flex-wrap gap-2 text-[11px] font-mono text-mut">
+                <span class="px-2.5 py-1 rounded-lg pill-surface">Front-end</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">UI Showcase</span>
+                <span class="px-2.5 py-1 rounded-lg pill-surface">GitHub</span>
+              </div>
+
+              <div class="flex items-center gap-4 pt-3 border-t border-slate-500/20 text-sm font-semibold">
+                <a href="https://github.com/blackxlkkjkk-del/Tesla" target="_blank" rel="noopener noreferrer"
+                  class="accent-bright-text hover:underline flex items-center gap-1">
+                  <span data-i18n="btn_repo">Ver repositório</span>
+                  <i class="ph-bold ph-arrow-up-right"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ARSENAL / HABILIDADES ==================== -->
+    <section id="stack" class="py-20 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="reveal mb-12">
+          <p class="rune-inscription text-xs uppercase accent-text font-bold mb-2">ᚨᚱᛊᛖᚾᚨᛚ • ᛊᚲᛁᛚᛚᛊ</p>
+          <h2 data-i18n="skills_title" class="font-display text-3xl sm:text-5xl font-bold text-main">
+            Arsenal <span class="gradient-title">Técnico</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 reveal">
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-file-html text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">HTML5</p>
+            <p data-i18n="skill_struct" class="text-[11px] text-mut mt-0.5">Estrutura Web</p>
+          </div>
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-paint-brush-broad text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">CSS3 &amp; UI</p>
+            <p data-i18n="skill_ui" class="text-[11px] text-mut mt-0.5">Layout &amp; Estilo</p>
+          </div>
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-file-js text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">JavaScript</p>
+            <p data-i18n="skill_logic" class="text-[11px] text-mut mt-0.5">Lógica &amp; DOM</p>
+          </div>
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-device-mobile text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">PWA</p>
+            <p data-i18n="skill_pwa" class="text-[11px] text-mut mt-0.5">Patas &amp; Cia</p>
+          </div>
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-git-branch text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">Git &amp; GitHub</p>
+            <p data-i18n="skill_git" class="text-[11px] text-mut mt-0.5">Versionamento</p>
+          </div>
+          <div class="glass-card rounded-2xl p-4 text-center">
+            <i class="ph-duotone ph-globe-hemisphere-west text-3xl accent-bright-text mb-2"></i>
+            <p class="font-display font-bold text-sm text-main">English</p>
+            <p data-i18n="skill_en" class="text-[11px] text-mut mt-0.5">Básico / Reading</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CONTATO ==================== -->
+    <section id="contato" class="py-20 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto glass-card rounded-3xl p-7 sm:p-12 text-center space-y-6 reveal">
+        <p class="rune-inscription text-xs uppercase accent-text font-bold">ᚲᛟᚾᛏᚨᛏᛟ • ᛚᛁᚾᚲᛊ</p>
+        <h2 data-i18n="contact_title" class="font-display text-3xl sm:text-5xl font-bold text-main">
+          Vamos <span class="gradient-title">Conectar?</span>
+        </h2>
+        <p data-i18n="contact_desc" class="text-sec text-sm sm:text-base max-w-xl mx-auto">
+          Acompanhe meus repositórios no GitHub, confira o EchoMind ou entre em contato para trocar ideias sobre Desenvolvimento de Sistemas.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-3.5 pt-2">
+          <a href="https://github.com/blackxlkkjkk-del" target="_blank" rel="noopener noreferrer"
+            class="btn-primary px-6 py-3.5 rounded-xl font-display font-bold text-sm flex items-center gap-2">
+            <i class="ph-fill ph-github-logo text-lg"></i>
+            <span>github.com/blackxlkkjkk-del</span>
+          </a>
+
+          <a href="https://github.com/blackxlkkjkk-del/patasEcia" target="_blank" rel="noopener noreferrer"
+            class="px-5 py-3.5 rounded-xl pill-surface hover:border-sky-400 text-main font-mono text-xs sm:text-sm font-bold flex items-center gap-2">
+            <i class="ph-bold ph-paw-print accent-bright-text"></i>
+            <span>Patas &amp; Cia</span>
+          </a>
+
+          <a href="https://github.com/blackxlkkjkk-del/Tesla" target="_blank" rel="noopener noreferrer"
+            class="px-5 py-3.5 rounded-xl pill-surface hover:border-sky-400 text-main font-mono text-xs sm:text-sm font-bold flex items-center gap-2">
+            <i class="ph-bold ph-lightning accent-bright-text"></i>
+            <span>Tesla</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="relative z-10 border-t border-slate-500/20 py-8 px-4 sm:px-6 text-center text-xs text-mut">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="font-rune tracking-widest accent-text">ᛒᚱᚢᚾᛟ • ᛞᛖᚡᛖᛚᛟᛈᛗᛖᚾᛏᛟ ᛞᛖ ᛊᛁᛊᛏᛖᛗᚨᛊ</p>
+      <p data-i18n="footer_copy">Bruno • Desenvolvimento de Sistemas • Inglês Básico</p>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== DICIONÁRIO DE IDIOMAS (PT-BR / EN) ====================
+    const translations = {
+      'pt-BR': {
+        nav_about: 'Sobre',
+        nav_forge: 'Oráculo',
+        nav_projects: 'Projetos',
+        nav_skills: 'Arsenal',
+        nav_contact: 'Contato',
+        hero_badge: 'DESENVOLVIMENTO DE SISTEMAS • INGLÊS BÁSICO',
+        hero_greeting: 'Eu sou o',
+        hero_subtitle: 'Código veloz, limpo e com identidade.',
+        hero_desc: 'Estudante de <strong class="text-main">Desenvolvimento de Sistemas (DS)</strong> com <strong class="text-main">Inglês Básico</strong>. Fiz parte do <strong class="accent-text">EchoMind</strong> e construo projetos pessoais como o PWA <strong class="text-main">Patas &amp; Cia</strong> e o projeto <strong class="text-main">Tesla</strong> no GitHub.',
+        hero_cta_projects: 'Ver Projetos',
+        stat_ds: 'Curso Técnico',
+        stat_app: 'EchoMind & PWA',
+        stat_en: 'Inglês Básico',
+        relic_title: 'RELÍQUIA RÚNICA • CLIQUE NA LÂMINA',
+        attack_ready: 'PRONTO • CLIQUE NO MACHADO',
+        attack_hint: 'Canalize runas de gelo ou mude para Fúria Espartana no topo.',
+        btn_throw: 'ARREMESSAR',
+        btn_recall: 'CHAMAR (△)',
+        about_title: 'Sobre o <span class="gradient-title">Bruno</span>',
+        about_heading: 'Construindo base sólida em Desenvolvimento de Sistemas',
+        about_p1: 'Meu nome é <strong class="text-main">Bruno</strong> e estou trilhando minha jornada em <strong class="text-main">Desenvolvimento de Sistemas (DS)</strong>. Gosto de interfaces diretas, bem estruturadas e com personalidade — unindo organização técnica com estética marcante.',
+        about_p2: 'Fiz parte do <strong class="accent-text">EchoMind</strong> e também desenvolvi projetos pessoais publicados no meu GitHub, como o <strong class="text-main">Patas &amp; Cia</strong> (aplicação web progressiva / PWA) e o projeto <strong class="text-main">Tesla</strong>. Tenho <strong class="text-main">Inglês Básico</strong>, o que me ajuda a ler documentações e evoluir constantemente.',
+        card_ds_title: 'Desenvolvimento de Sistemas',
+        card_ds_desc: 'Lógica de programação, estrutura de projetos web, interfaces responsivas e versionamento no GitHub.',
+        card_en_title: 'Inglês Básico',
+        card_en_desc: 'Compreensão de termos técnicos, leitura de códigos e documentação em evolução contínua.',
+        card_fav_title: 'Ícone da Aba Ativo',
+        card_fav_desc: 'Muda conforme o modo e runas.',
+        mimir_tag: '• SABEDORIA DO ORÁCULO',
+        mimir_title: 'Conselho de Mimir para a Jornada em DS',
+        mimir_btn: 'Novo Conselho',
+        projects_title: 'Projetos em <span class="gradient-title">Destaque</span>',
+        projects_all_gh: 'Ver todos no GitHub (@blackxlkkjkk-del)',
+        proj_echo_desc: 'Projeto web no qual <strong class="text-main">eu fiz parte</strong> (não sou o criador solo). Experiência digital moderna publicada na Vercel com foco em interface e navegação fluida.',
+        proj_patas_desc: 'Projeto de <strong class="text-main">PetApp em formato PWA</strong> (Progressive Web App) disponível no GitHub, pensado para oferecer experiência de aplicativo na web com visual prático e responsivo.',
+        proj_tesla_desc: 'Projeto pessoal <strong class="text-main">Tesla</strong> hospedado no GitHub, explorando layout tecnológico, apresentação de produto e estrutura front-end.',
+        btn_visit: 'Acessar site',
+        btn_repo: 'Ver repositório',
+        skills_title: 'Arsenal <span class="gradient-title">Técnico</span>',
+        skill_struct: 'Estrutura Web',
+        skill_ui: 'Layout & Estilo',
+        skill_logic: 'Lógica & DOM',
+        skill_pwa: 'Patas & Cia',
+        skill_git: 'Versionamento',
+        skill_en: 'Básico / Reading',
+        contact_title: 'Vamos <span class="gradient-title">Conectar?</span>',
+        contact_desc: 'Acompanhe meus repositórios no GitHub, confira o EchoMind ou entre em contato para trocar ideias sobre Desenvolvimento de Sistemas.',
+        footer_copy: 'Bruno • Desenvolvimento de Sistemas • Inglês Básico'
+      },
+      'en': {
+        nav_about: 'About',
+        nav_forge: 'Oracle',
+        nav_projects: 'Projects',
+        nav_skills: 'Arsenal',
+        nav_contact: 'Contact',
+        hero_badge: 'SYSTEMS DEVELOPMENT • BASIC ENGLISH',
+        hero_greeting: "I'm",
+        hero_subtitle: 'Fast, clean code with strong identity.',
+        hero_desc: '<strong class="text-main">Systems Development (DS)</strong> student with <strong class="text-main">Basic English</strong>. I was <strong class="accent-text">part of EchoMind</strong> and build personal projects like the <strong class="text-main">Patas &amp; Cia</strong> PWA and <strong class="text-main">Tesla</strong> on GitHub.',
+        hero_cta_projects: 'View Projects',
+        stat_ds: 'Tech Track',
+        stat_app: 'EchoMind & PWA',
+        stat_en: 'Basic English',
+        relic_title: 'RUNIC RELIC • CLICK THE BLADE',
+        attack_ready: 'READY • CLICK THE AXE',
+        attack_hint: 'Channel frost runes or switch to Spartan Rage in the top bar.',
+        btn_throw: 'THROW',
+        btn_recall: 'RECALL (△)',
+        about_title: 'About <span class="gradient-title">Bruno</span>',
+        about_heading: 'Building a solid foundation in Systems Development',
+        about_p1: "My name is <strong class=\"text-main\">Bruno</strong> and I'm growing in <strong class=\"text-main\">Systems Development (DS)</strong>. I like direct, well-structured interfaces with personality — blending technical clarity with bold visuals.",
+        about_p2: 'I was <strong class="accent-text">part of EchoMind</strong> and also built personal projects on GitHub, such as <strong class="text-main">Patas &amp; Cia</strong> (Progressive Web App / PWA) and <strong class="text-main">Tesla</strong>. I have <strong class="text-main">Basic English</strong>, helping me read docs and improve every day.',
+        card_ds_title: 'Systems Development',
+        card_ds_desc: 'Programming logic, web architecture, responsive interfaces, and GitHub version control.',
+        card_en_title: 'Basic English',
+        card_en_desc: 'Understanding technical terms, reading code, and growing my English skills steadily.',
+        card_fav_title: 'Live Tab Icon',
+        card_fav_desc: 'Updates with mode and runes.',
+        mimir_tag: '• ORACLE WISDOM',
+        mimir_title: "Mimir's Advice for Your DS Journey",
+        mimir_btn: 'New Advice',
+        projects_title: 'Featured <span class="gradient-title">Projects</span>',
+        projects_all_gh: 'See all on GitHub (@blackxlkkjkk-del)',
+        proj_echo_desc: 'Web project where <strong class="text-main">I was part of the team</strong> (not the solo creator). Published on Vercel with focus on interface and smooth navigation.',
+        proj_patas_desc: '<strong class="text-main">PetApp PWA</strong> (Progressive Web App) project on GitHub, designed to deliver an app-like web experience with responsive layout.',
+        proj_tesla_desc: 'Personal <strong class="text-main">Tesla</strong> project on GitHub, exploring tech layout, product showcase, and front-end structure.',
+        btn_visit: 'Visit site',
+        btn_repo: 'View repo',
+        skills_title: 'Tech <span class="gradient-title">Arsenal</span>',
+        skill_struct: 'Web Structure',
+        skill_ui: 'Layout & UI',
+        skill_logic: 'Logic & DOM',
+        skill_pwa: 'Patas & Cia',
+        skill_git: 'Version Control',
+        skill_en: 'Basic / Reading',
+        contact_title: "Let's <span class=\"gradient-title\">Connect?</span>",
+        contact_desc: 'Check out my GitHub repositories, visit EchoMind, or get in touch to talk about Systems Development.',
+        footer_copy: 'Bruno • Systems Development • Basic English'
+      }
+    };
+
+    const mimirQuotes = {
+      'pt-BR': [
+        '"A pressa quebra a compilação, rapaz. Escreva código limpo, teste cada passo e deixe a lógica falar."',
+        '"Um bom sistema não depende só do visual — depende de base firme e atenção aos detalhes."',
+        '"Cada commit no GitHub é um passo a mais em Midgard. Não tenha medo de errar e refatorar."',
+        '"Inglês básico hoje é leitura de documentação amanhã. Continue avançando um pouco todo dia."'
+      ],
+      'en': [
+        '"Rushing breaks the build, lad. Write clean code, test every step, and let the logic hold strong."',
+        '"A good system relies not only on looks — it needs a solid foundation and attention to detail."',
+        '"Every commit on GitHub is another step forward. Never fear debugging and refactoring."',
+        '"Basic English today becomes reading documentation tomorrow. Keep leveling up a bit every day."'
+      ]
+    };
+
+    const runeAttacks = {
+      'pt-BR': [
+        { name: 'IRA DO LEVIATÃ (ᛟ)', desc: 'Corte gélido de alta precisão atravessando o código.' },
+        { name: 'SOPRO DE THAMUR (ᛏ)', desc: 'Onda glacial congela bugs e estabiliza a interface.' },
+        { name: 'FÚRIA DE NJÖRÐR (ᚨ)', desc: 'Redemoinho rúnico varre gargalos e lentidão.' },
+        { name: 'GOLPE DE HELHEIM (ᛒ)', desc: 'Impacto profundo que reinicia a carga com força total.' }
+      ],
+      'en': [
+        { name: 'LEVIATHAN WRATH (ᛟ)', desc: 'High-precision frost slash cutting cleanly through code.' },
+        { name: 'THAMUR BREATH (ᛏ)', desc: 'Glacial wave freezes bugs and locks in layout stability.' },
+        { name: 'NJÖRÐR FURY (ᚨ)', desc: 'Runic vortex clears bottlenecks and latency.' },
+        { name: 'HELHEIM STRIKE (ᛒ)', desc: 'Deep impact driving full-throttle execution.' }
+      ]
+    };
+
+    // ==================== ESTADO GLOBAL ====================
+    let currentLang = 'pt-BR';
+    let isLightTheme = false;
+    let isSpartanRage = false;
+    let hitCount = 0;
+    let attackIndex = 0;
+    let isAxeThrown = false;
+    let mimirIndex = 0;
+    let particles = [];
+
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // ==================== NOTIFICAÇÃO TOAST ====================
+    let toastTimer = null;
+    function showToast(title, desc) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-desc').textContent = desc;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2800);
+    }
+
+    // ==================== ATUALIZADOR DO ÍCONE DA ABA (FAVICON SVG DINÂMICO) ====================
+    function updateFavicon(customRune = null) {
+      const faviconEl = document.getElementById('dynamic-favicon');
+      const previewRune = document.getElementById('tab-preview-rune');
+      const previewBox = document.getElementById('tab-preview-box');
+
+      let bgColor = isLightTheme ? '#E0F2FE' : '#040914';
+      let glowColor = isSpartanRage ? '#FF4500' : (isLightTheme ? '#0284C7' : '#00F0FF');
+      let runeChar = customRune || (isSpartanRage ? 'ᛊ' : 'ᛒ');
+
+      if (previewRune) previewRune.textContent = runeChar;
+      if (previewBox) {
+        previewBox.style.background = bgColor;
+        previewBox.style.borderColor = glowColor;
+      }
+
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="16" fill="${bgColor}" stroke="${glowColor}" stroke-width="3"/>
+        <path d="M27 12 L33 12 L31 52 L25 52 Z" fill="#94A3B8"/>
+        <path d="M31 15 C41 13, 50 9, 54 7 C56 18, 54 29, 48 37 C43 33, 37 29, 31 28 Z" fill="${glowColor}"/>
+        <text x="16" y="48" font-family="serif" font-weight="bold" font-size="18" fill="${glowColor}">${runeChar}</text>
+      </svg>`;
+
+      if (faviconEl) {
+        faviconEl.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+      }
+    }
+
+    // ==================== IDIOMA PT-BR / EN ====================
+    function applyLanguage() {
+      document.documentElement.lang = currentLang;
+      document.getElementById('lang-label').textContent = currentLang === 'pt-BR' ? 'PT-BR' : 'EN';
+
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang] && translations[currentLang][key]) {
+          el.innerHTML = translations[currentLang][key];
+        }
+      });
+
+      document.getElementById('mimir-quote').textContent = mimirQuotes[currentLang][mimirIndex % mimirQuotes[currentLang].length];
+      document.getElementById('throw-btn-label').textContent = isAxeThrown
+        ? (currentLang === 'pt-BR' ? 'CHAMAR (△)' : 'RECALL (△)')
+        : (currentLang === 'pt-BR' ? 'ARREMESSAR' : 'THROW');
+    }
+
+    document.getElementById('lang-toggle-btn').addEventListener('click', () => {
+      currentLang = currentLang === 'pt-BR' ? 'en' : 'pt-BR';
+      applyLanguage();
+      showToast(
+        currentLang === 'pt-BR' ? 'Idioma: Português' : 'Language: English',
+        currentLang === 'pt-BR' ? 'Interface atualizada para PT-BR.' : 'Interface switched to EN.'
+      );
+    });
+
+    // ==================== TEMA ESCURO / CLARO ====================
+    document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+      isLightTheme = !isLightTheme;
+      document.body.classList.toggle('light-theme', isLightTheme);
+      const icon = document.getElementById('theme-icon');
+      icon.className = isLightTheme ? 'ph-fill ph-sun text-base accent-text' : 'ph-fill ph-moon-stars text-base accent-text';
+      updateFavicon();
+      showToast(
+        isLightTheme ? 'Tema Claro Ativado' : 'Tema Escuro Ativado',
+        isLightTheme ? 'Visual claro aplicado em toda a página.' : 'Visual azul escuro profundo aplicado.'
+      );
+    });
+
+    // ==================== MODO LEVIATÃ / FÚRIA ESPARTANA ====================
+    document.getElementById('rage-toggle-btn').addEventListener('click', () => {
+      isSpartanRage = !isSpartanRage;
+      document.body.classList.toggle('spartan-rage', isSpartanRage);
+      const rageIcon = document.getElementById('rage-icon');
+      const rageText = document.getElementById('rage-text');
+
+      if (isSpartanRage) {
+        rageIcon.className = 'ph-fill ph-flame text-sm accent-bright-text';
+        rageText.textContent = 'ESPARTA';
+        spawnBurst(window.innerWidth * 0.65, window.innerHeight * 0.45, '#FF4500', 36);
+        showToast('FÚRIA ESPARTANA ATIVADA', 'Energia espartana aplicada ao site e ao ícone da aba.');
+      } else {
+        rageIcon.className = 'ph-fill ph-snowflake text-sm accent-bright-text';
+        rageText.textContent = 'LEVIATÃ';
+        spawnBurst(window.innerWidth * 0.65, window.innerHeight * 0.45, '#00F0FF', 36);
+        showToast('LEVIATÃ FROST ATIVADO', 'Energia gélida azul-ciano restaurada.');
+      }
+      updateFavicon();
+    });
+
+    // ==================== PARTÍCULAS E ONDA DE CHOQUE ====================
+    function spawnBurst(x, y, color, count = 24) {
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+        const speed = 2 + Math.random() * 6;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 2 + Math.random() * 3.5,
+          alpha: 1,
+          color
+        });
+      }
+    }
+
+    function createShockwave(container) {
+      const ring = document.createElement('div');
+      ring.className = 'shockwave';
+      container.appendChild(ring);
+      setTimeout(() => ring.remove(), 700);
+    }
+
+    // ==================== CLIQUE NO MACHADO LEVIATÃ ====================
+    const axeWrapper = document.getElementById('leviathan-wrapper');
+    const heroArena = document.getElementById('hero-arena');
+
+    axeWrapper.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isAxeThrown) {
+        recallAxe();
+        return;
+      }
+
+      hitCount++;
+      const atk = runeAttacks[currentLang][attackIndex % runeAttacks[currentLang].length];
+      attackIndex++;
+
+      document.getElementById('rune-counter').textContent = `${String(hitCount).padStart(2, '0')} GOLPES`;
+      document.getElementById('attack-name').textContent = atk.name;
+      document.getElementById('attack-desc').textContent = atk.desc;
+
+      heroArena.classList.remove('shake-hit');
+      void heroArena.offsetWidth;
+      heroArena.classList.add('shake-hit');
+
+      createShockwave(axeWrapper);
+      const rect = axeWrapper.getBoundingClientRect();
+      const burstColor = isSpartanRage ? '#FF4500' : (isLightTheme ? '#0284C7' : '#00F0FF');
+      spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, burstColor, 28);
+
+      const runeChar = atk.name.match(/\(([^)]+)\)/)?.[1] || 'ᛟ';
+      updateFavicon(runeChar);
+    });
+
+    // ==================== ARREMESSAR / CHAMAR MACHADO (△) ====================
+    function throwAxe() {
+      isAxeThrown = true;
+      axeWrapper.classList.remove('axe-idle', 'axe-recalled');
+      axeWrapper.classList.add('axe-thrown');
+      applyLanguage();
+      showToast(currentLang === 'pt-BR' ? 'Machado Arremessado' : 'Axe Thrown', currentLang === 'pt-BR' ? 'Clique em Chamar (△) para trazer de volta.' : 'Click Recall (△) to bring it back.');
+    }
+
+    function recallAxe() {
+      isAxeThrown = false;
+      axeWrapper.classList.remove('axe-thrown');
+      axeWrapper.classList.add('axe-recalled');
+      const rect = axeWrapper.getBoundingClientRect();
+      spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, isSpartanRage ? '#FF4500' : '#00F0FF', 22);
+      setTimeout(() => {
+        axeWrapper.classList.remove('axe-recalled');
+        axeWrapper.classList.add('axe-idle');
+      }, 620);
+      applyLanguage();
+      updateFavicon();
+    }
+
+    document.getElementById('throw-axe-btn').addEventListener('click', () => {
+      if (isAxeThrown) recallAxe();
+      else throwAxe();
+    });
+
+    // ==================== ORÁCULO DE MIMIR ====================
+    document.getElementById('mimir-next-btn').addEventListener('click', () => {
+      mimirIndex++;
+      document.getElementById('mimir-quote').textContent = mimirQuotes[currentLang][mimirIndex % mimirQuotes[currentLang].length];
+      updateFavicon('ᛗ');
+    });
+
+    // ==================== PARALLAX SUTIL NO HOMEM DE TERNO + AURA DO CURSOR ====================
+    const suitEl = document.getElementById('mysterious-suit');
+    const cursorAura = document.getElementById('cursor-aura');
+
+    window.addEventListener('mousemove', (e) => {
+      if (cursorAura) {
+        cursorAura.style.left = `${e.clientX}px`;
+        cursorAura.style.top = `${e.clientY}px`;
+      }
+      if (suitEl && window.innerWidth >= 1024) {
+        const dx = (e.clientX / window.innerWidth - 0.5) * 14;
+        const dy = (e.clientY / window.innerHeight - 0.5) * 10;
+        suitEl.style.transform = `translate(${-28 + dx}px, ${dy}px)`;
+      }
+    });
+
+    // ==================== LOOP DE ANIMAÇÃO DAS PARTÍCULAS ====================
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Partículas ambiente suaves
+      if (particles.length < 36 && Math.random() < 0.25) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: canvas.height + 10,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: -(0.6 + Math.random() * 1.4),
+          size: 1.5 + Math.random() * 2.5,
+          alpha: 0.45,
+          color: isSpartanRage ? '#FF4500' : (isLightTheme ? '#0284C7' : '#38BDF8')
+        });
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.012;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ==================== SCROLL REVEAL & MENU MOBILE ====================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    const mobileBtn = document.getElementById('mobile-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileBtn.addEventListener('click', () => {
+      mobileNav.classList.toggle('hidden');
+      mobileNav.classList.toggle('flex');
+    });
+
+    document.querySelectorAll('.mobile-item').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.add('hidden');
+        mobileNav.classList.remove('flex');
+      });
+    });
+
+    // Inicializa idioma e ícone da aba
+    applyLanguage();
+    updateFavicon();
+  </script>
+</body>
+</html>
